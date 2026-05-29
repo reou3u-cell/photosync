@@ -8,9 +8,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Fyne Android Build
-        uses: fyne-io/action@v1
+      - name: Run Clean Fyne Build inside Docker
+        run: |
+          # Запускаем официальный контейнер Fyne-cross
+          docker run --rm -v ${{ github.workspace }}:/app -w /app fyneio/fyne-cross-images:android sh -c "
+            rm -f go.mod go.sum || true
+            go mod init photo-uploader
+            go get fyne.io/fyne/v2@v2.4.3
+            go get google.golang.org/api@v0.220.0
+            go mod tidy
+            fyne-cross android --pull=false -no-cache --app-id com.frost.photosync.v10 --name PhotoSyncMobileAuto .
+          "
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
         with:
-          os: android
-          app-id: com.frost.photosync.v10
-          name: PhotoSyncMobileAuto
+          name: PhotoSync-Android-APK
+          path: ./fyne-cross/dist/android/PhotoSyncMobileAuto.apk
