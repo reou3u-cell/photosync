@@ -8,10 +8,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Linux Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib libgl1-mesa-dev xorg-dev
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.21'
+          cache: false # Отключаем кэш, так как у нас нет файла go.sum
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -30,8 +36,8 @@ jobs:
 
       - name: Build APK
         run: |
-          go mod tidy
-          fyne package -os android -appID com.frost.photosync.v10 -name "PhotoSyncMobileAuto"
+          go mod tidy # Сервер сам сгенерирует недостающий файл go.sum
+          fyne package -os android -appID com.frost.photosync.v10 -name "PhotoSyncMobileAuto" -icon Icon.png
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
