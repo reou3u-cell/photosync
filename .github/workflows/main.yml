@@ -12,22 +12,19 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.21'
-          cache: false
 
-      - name: Auto-generate Modules
-        run: |
-          rm -f go.mod go.sum || true
-          go mod init photo-uploader
-          go get fyne.io/fyne/v2@v2.4.3
-          go get google.golang.org/api@v0.220.0
-          go mod tidy
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
 
       - name: Install fyne-cross
         run: go install ://github.com
 
-      - name: Run Fyne-Cross Compilation
+      - name: Run Fyne-Cross Android Build
         run: |
-          # Запускаем сборку через установленный fyne-cross
+          # Сборка из корня проекта, где теперь лежат все файлы
           fyne-cross android --pull=false -no-cache --app-id com.frost.photosync.v10 --name PhotoSyncMobileAuto .
 
       - name: Upload APK Artifact
