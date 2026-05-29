@@ -10,14 +10,14 @@ jobs:
 
       - name: Build APK inside Official Fyne Container
         run: |
-          # Сервер запускает официальный мобильный образ Fyne и компилирует код из корня
+          # Запускаем сборку через встроенную утилиту fyne package
           docker run --rm -v ${{ github.workspace }}:/app -w /app fyneio/fyne-cross-images:android sh -c "
             go mod tidy
-            fyne-cross android --pull=false -no-cache --app-id com.frost.photosync.v10 --name PhotoSyncMobileAuto .
+            fyne package -os android -appID com.frost.photosync.v10 -name "PhotoSyncMobileAuto"
           "
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PhotoSync-Android-APK
-          path: ./fyne-cross/dist/android/PhotoSyncMobileAuto.apk
+          path: ./PhotoSyncMobileAuto.apk
