@@ -8,41 +8,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Linux Dependencies
+      - name: Auto-generate Modules
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-multilib libgl1-mesa-dev xorg-dev
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.21'
-          cache: false
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '11'
-
-      - name: Setup Android SDK and NDK
-        run: |
-          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/25.1.8937393" >> $GITHUB_ENV
-
-      - name: Install Fyne CLI
-        run: go install fyne.io/fyne/v2/cmd/fyne@latest
-
-      - name: Download Modules and Build APK
-        run: |
-          go mod init photo-uploader || true
-          go get fyne.io/fyne/v2@v2.4.0
+          rm -f go.mod go.sum || true
+          go mod init photo-uploader
+          go get fyne.io/fyne/v2@v2.4.3
           go get google.golang.org/api@v0.220.0
-          go get golang.org/x/oauth2@latest
           go mod tidy
-          fyne package -os android -appID com.frost.photosync.v10 -name "PhotoSyncMobileAuto"
 
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
+      - name: Fyne Android Build
+        uses: fyne-io/fyne-action@v1
         with:
-          name: PhotoSync-Android-APK
-          path: ./*.apk
+          os: android
+          app-id: com.frost.photosync.v10
+          name: PhotoSyncMobileAuto
