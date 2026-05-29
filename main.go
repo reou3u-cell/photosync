@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -31,7 +30,7 @@ const (
 	targetFolderID   = "13LUCsiPP-K9H29dPf3DRqx_AcHviYJIZ"
 	
 	// ВШИВАЕМ ТОКЕН ТЕКСТОМ: Скопируйте ВЕСЬ текст из вашего token.json на ПК и вставьте сюда:
-	rawSavedToken = `{}`
+	rawSavedToken = `{"access_token":"ya29.a0AQvPyIMlUVq7miKEeDaGRy_YW-veYmHdpex0rXM4Zftf5EY2XJfIcHpyYtpEUIdWZbpt6-RVMOrB31ysk9V37c8vaTNDtOZBUeb_e-10Ju7t7pqZF9vokuUKB6taX1ncUEzhE0lxBXprBy1dn0txMCqM0PMo0XlMqD88wBjBX6sFUlC7ze7xQNXrhmlI_YPhWnkfNSUaCgYKAVASARYSFQHGX2Mi1A8fRyf4brPWFBFf4n6DVw0206","token_type":"Bearer","refresh_token":"1//0czNcskZxS5DWCgYIARAAGAwSNwF-L9IrDaGWekGrGUSUNr42DMZ5Y257JA0DM2OlEruT4s3GwSri13jAnmOi1OTki-TM-jtLnFw","expiry":"2026-05-29T22:49:53.3482285+05:00","expires_in":3599}`
 )
 
 //go:embed credentials.json
