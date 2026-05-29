@@ -8,17 +8,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Go and Build APK via Docker
+      - name: Build APK inside Official Fyne Container
         run: |
-          # Прямая бесконфликтная сборка в изолированном контейнере Linux
+          # Сервер запускает официальный мобильный образ Fyne и компилирует код из корня
           docker run --rm -v ${{ github.workspace }}:/app -w /app fyneio/fyne-cross-images:android sh -c "
-            go mod init photo-uploader || true
-            go get fyne.io/fyne/v2@v2.4.3
-            go get google.golang.org/api@v0.220.0
-            go get golang.org/x/oauth2@latest
             go mod tidy
-            go install ://github.com
-            /go/bin/fyne-cross android --pull=false -no-cache --app-id com.frost.photosync.v10 --name PhotoSyncMobileAuto .
+            fyne-cross android --pull=false -no-cache --app-id com.frost.photosync.v10 --name PhotoSyncMobileAuto .
           "
 
       - name: Upload APK Artifact
